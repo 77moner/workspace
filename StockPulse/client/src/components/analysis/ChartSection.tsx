@@ -16,6 +16,12 @@ export function ChartSection({ ticker, chartData }: ChartSectionProps) {
   const [activeTab, setActiveTab] = useState("1m")
 
   console.log("ChartSection: Rendering charts for ticker:", ticker)
+  console.log("ChartSection: Chart data received:", {
+    oneMinute: chartData?.oneMinute?.length || 0,
+    fifteenMinute: chartData?.fifteenMinute?.length || 0,
+    oneHour: chartData?.oneHour?.length || 0,
+    fifteenMinuteFirst3: chartData?.fifteenMinute?.slice(0, 3)
+  })
 
   return (
     <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl">

@@ -30,7 +30,9 @@ export const validateTicker = async (ticker: string) => {
 export const getStockAnalysis = async (ticker: string) => {
   try {
     console.log(`API: Getting stock analysis for: ${ticker}`);
-    const response = await api.get(`/api/stocks/analysis/${ticker}`);
+    // Add cache-busting parameter to force fresh data
+    const timestamp = Date.now();
+    const response = await api.get(`/api/stocks/analysis/${ticker}?t=${timestamp}`);
     console.log(`API: Stock analysis successful for ${ticker}`);
     return response.data;
   } catch (error: any) {
@@ -51,6 +53,22 @@ export const refreshStockData = async (ticker: string) => {
     return response.data;
   } catch (error: any) {
     console.error(`API: Error refreshing stock data for ${ticker}:`, error);
+    throw new Error(error?.response?.data?.error || error.message);
+  }
+};
+
+// Description: Get popular stocks with real-time data
+// Endpoint: GET /api/stocks/popular
+// Request: none
+// Response: { success: boolean, stocks: Array<{ symbol: string, name: string, currentPrice: string, change: string, isPositive: boolean }> }
+export const getPopularStocks = async () => {
+  try {
+    console.log('API: Getting popular stocks data');
+    const response = await api.get('/api/stocks/popular');
+    console.log('API: Popular stocks data retrieved successfully');
+    return response.data;
+  } catch (error: any) {
+    console.error('API: Error getting popular stocks:', error);
     throw new Error(error?.response?.data?.error || error.message);
   }
 };

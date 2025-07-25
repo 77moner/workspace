@@ -1,0 +1,5 @@
+# Python requirements for StockPulse backend (if needed)
+# Add your Python dependencies here, e.g.:
+# flask
+# requests
+# pandas

@@ -113,6 +113,26 @@ router.post('/refresh/:ticker', async (req, res) => {
   }
 });
 
+// Get popular stocks with real-time data
+router.get('/popular', async (req, res) => {
+  try {
+    console.log('StockRoutes: Getting popular stocks data');
+    
+    const popularTickers = ['AAPL', 'TSLA', 'GOOGL', 'MSFT', 'AMZN', 'NVDA'];
+    const stocksData = await stockService.getPopularStocks(popularTickers);
+    
+    console.log(`StockRoutes: Retrieved data for ${stocksData.length} popular stocks`);
+    res.json({ success: true, stocks: stocksData });
+    
+  } catch (error) {
+    console.error('StockRoutes: Error getting popular stocks:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Internal server error while getting popular stocks'
+    });
+  }
+});
+
 console.log("StockRoutes: All routes defined");
 console.log("StockRoutes: Exporting router...");
 

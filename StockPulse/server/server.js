@@ -1,18 +1,15 @@
 // Load environment variables
 require("dotenv").config();
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const express = require("express");
 const session = require("express-session");
 const MongoStore = require('connect-mongo');
 const basicRoutes = require("./routes/index");
 const stockRoutes = require("./routes/stockRoutes");
-const { connectDB } = require("./config/database");
+// const { connectDB } = require("./config/database");
 const cors = require("cors");
 
-if (!process.env.DATABASE_URL) {
-  console.error("Error: DATABASE_URL variables in .env missing.");
-  process.exit(-1);
-}
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -25,8 +22,7 @@ app.use(cors({}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Database connection
-connectDB();
+
 
 app.on("error", (error) => {
   console.error(`Server error: ${error.message}`);

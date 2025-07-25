@@ -6,6 +6,35 @@ import { useToast } from "@/hooks/useToast"
 import { RecommendationCard } from "@/components/analysis/RecommendationCard"
 import { ChartSection } from "@/components/analysis/ChartSection"
 import { NewsSentimentPanel } from "@/components/analysis/NewsSentimentPanel"
+
+// Card to display all company info from Tiingo
+function CompanyInfoCard({ info, quote }: { info: any, quote?: any }) {
+  if (!info) return null;
+  return (
+    <div className="bg-white/80 rounded-xl shadow p-6 mb-8 border border-gray-100">
+      <h2 className="text-xl font-bold mb-2">Company Information</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div><span className="font-medium">Name:</span> {info.companyName}</div>
+        <div><span className="font-medium">Ticker:</span> {info.ticker || '-'}</div>
+        <div><span className="font-medium">Sector:</span> {info.sector || '-'}</div>
+        <div><span className="font-medium">Industry:</span> {info.industry || '-'}</div>
+        <div><span className="font-medium">Exchange:</span> {info.exchange || info.exchangeCode || '-'}</div>
+        <div><span className="font-medium">Market Cap:</span> {info.marketCap || '-'}</div>
+        <div className="md:col-span-2"><span className="font-medium">Description:</span> {info.description || '-'}</div>
+        {quote && (
+          <>
+            <div><span className="font-medium">Last Close:</span> ${quote.close}</div>
+            <div><span className="font-medium">Open:</span> ${quote.open}</div>
+            <div><span className="font-medium">High:</span> ${quote.high}</div>
+            <div><span className="font-medium">Low:</span> ${quote.low}</div>
+            <div><span className="font-medium">Volume:</span> {quote.volume}</div>
+            <div><span className="font-medium">Date:</span> {quote.date}</div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
 import { getStockAnalysis, refreshStockData } from "@/api/stocks"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
@@ -94,6 +123,19 @@ export function AnalysisPage() {
     )
   }
 
+  // Try to extract Tiingo quote if present (from backend, add to result if not already)
+  const tiingoQuote = analysisData.tiingoQuote || analysisData.quote || analysisData.latestQuote;
+  // Pass all company info fields
+  const companyInfo = {
+    companyName: analysisData.companyName,
+    sector: analysisData.sector,
+    industry: analysisData.industry,
+    exchange: analysisData.exchange,
+    exchangeCode: analysisData.exchangeCode,
+    marketCap: analysisData.marketCap,
+    description: analysisData.description,
+    ticker: ticker
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900">
       <div className="container mx-auto px-4 py-8">
@@ -124,6 +166,9 @@ export function AnalysisPage() {
             Refresh
           </Button>
         </div>
+
+        {/* Company Info Card (all Tiingo data) */}
+        <CompanyInfoCard info={companyInfo} quote={tiingoQuote} />
 
         {/* Analysis Content */}
         <div className="grid lg:grid-cols-3 gap-8">
